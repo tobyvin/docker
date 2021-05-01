@@ -1,0 +1,27 @@
+version: "2.1"
+
+services:
+  wireguard:
+    image: ghcr.io/linuxserver/wireguard
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+      - SERVERURL=asgard.nasaltmine.com
+      - SERVERPORT=51820
+      - PEERS=tayoby,thor,mjolnir
+      - ALLOWEDIPS=192.168.1.0/24, 10.13.13.0/24
+    volumes:
+      - ./data:/config
+      - /lib/modules:/lib/modules
+    ports:
+      - 51820:51820/udp
+    restart: unless-stopped
+
+networks:
+  default:
+    name: wireguard

@@ -1,0 +1,39 @@
+version: "3.2"
+
+services:
+  test:
+    image: bash
+    container_name: test
+    stdin_open: true
+    tty: true
+    networks:
+      - proxy
+    volumes:
+      - test:/nfs
+      # - type: volume
+      #   source: test
+      #   target: /data
+      #   volume:
+      #     nocopy: true
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
+volumes:
+  test:
+    name: test
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: addr=bifrost,nolock,soft,rw
+      device: ":/mnt/share/docker/test"
+
+networks:
+  proxy:
+    external: true

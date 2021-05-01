@@ -1,0 +1,41 @@
+version: "2.1"
+
+services:
+  syncthing:
+    image: ghcr.io/linuxserver/syncthing
+    container_name: syncthing
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+    volumes:
+      - syncthing:/config
+      - ${HOME}/Sync:/config/Sync
+      - ${HOME}/docker:/config/docker
+      - ${HOME}/dotfiles:/config/dotfiles
+    ports:
+      - 8384:8384
+      - 22000:22000
+      - 21027:21027/udp
+    restart: unless-stopped
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      labels:
+        - traefik.enable=true
+        - "traefik.http.routers.syncthing.rule=(Host(`sync.nasaltmine.com`) && Path(`/{{.Node.Hostname}}`))"
+        - traefik.http.routers.syncthing.entrypoints=websecure
+        - traefik.http.services.syncthing.loadbalancer.server.port=8384
+        - traefik.http.routers.syncthing.middlewares=secured@docker
+
+volumes:
+  syncthing:
+
+networks:
+  default:
+    external:
+      name: proxy

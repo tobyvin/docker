@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  foundry:
+    image: felddy/foundryvtt
+    container_name: foundry
+    init: true
+    restart: unless-stopped
+    environment:
+      - CONTAINER_CACHE=/data/Cache
+      - CONTAINER_PATCH_URLS=https://gist.githubusercontent.com/yddlef/df54ee1bbca93095a71d75cd15e216eb/raw/plutonium.sh
+      - FOUNDRY_UID=1000
+      - FOUNDRY_GID=1000
+      - FOUNDRY_HOSTNAME=foundry.nasaltmine.com
+      - FOUNDRY_PROXY_PORT=443
+      - FOUNDRY_PROXY_SSL=true
+      - FOUNDRY_WORLD=elda
+      - TIMEZONE=America/Chicago
+    volumes:
+      - nfs:/data
+    expose:
+      - 30000
+    secrets:
+      - source: foundry_secrets
+        target: config.json
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.foundry.entrypoints=websecure
+
+secrets:
+  foundry_secrets:
+    file: ./secrets/foundry_secrets.json
+
+volumes:
+  nfs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: addr=bifrost,nolock,soft,rw
+      device: ":/mnt/share/docker/foundry"
+
+networks:
+  default:
+    external:
+      name: proxy

@@ -1,0 +1,30 @@
+version: "3.5"
+
+services:
+  diun:
+    image: crazymax/diun
+    container_name: diun
+    environment:
+      - TZ=America/Chicago
+      - LOG_LEVEL=info
+      - LOG_JSON=false
+      - "DIUN_WATCH_SCHEDULE=0 */6 * * *"
+      - DIUN_WATCH_WORKERS=20
+      - DIUN_PROVIDERS_DOCKER=true
+      - DIUN_PROVIDERS_DOCKER_WATCHBYDEFAULT=true
+      - DIUN_WATCH_FIRSTCHECKNOTIF=true
+      - DIUN_NOTIF_DISCORD_WEBHOOKURL=https://canary.discord.com/api/webhooks/795743439332704256/zUKR4a0_aqEE9TTCk4uxmkKQN02H8VsrmBLVham6rt9DwMRFcj1c9AgR2FGTYcc8y6KF
+    volumes:
+      - nfs:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    network_mode: bridge
+    restart: unless-stopped
+
+
+volumes:
+  nfs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: addr=bifrost,nolock,soft,rw
+      device: ":/mnt/share/docker/diun"

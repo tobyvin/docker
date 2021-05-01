@@ -1,0 +1,10 @@
+FROM nginx:alpine
+COPY ./update-5etools.sh /docker-entrypoint.d/
+
+RUN ln -sf /usr/share/nginx/html /data
+
+RUN apk add --no-cache \
+    unzip \
+    rsync
+
+VOLUME /data

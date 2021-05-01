@@ -1,0 +1,28 @@
+version: "2.4"
+
+services:
+  octoprint:
+    image: octoprint/octoprint
+    container_name: octoprint
+    environment:
+      - ENABLE_MJPG_STREAMER=true
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/video0:/dev/video0
+    volumes:
+      - ./data:/octoprint
+    ports:
+      - 8282:80
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.octoprint.entrypoints=websecure
+    deploy:
+      placement:
+        constraints:
+          - node.labels.devices.cr10s == true
+      
+networks:
+  default:
+    external:
+      name: proxy

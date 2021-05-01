@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  5etools:
+    build: ./5etools
+    container_name: 5etools
+    volumes:
+      - ./data/5etools:/data
+    ports:
+      - 8080:80
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.foundry.entrypoints=websecure
+
+networks:
+  default:
+    external:
+      name: proxy
