@@ -7,13 +7,13 @@ services:
     hostname: pihole
     cap_add:
       - NET_ADMIN
-    secrets:
-      - webpassword
+    env_file:
+      - .env
+      - secrets/webpassword.env
     environment:
       - ADMIN_EMAIL=$EMAIL
       - TZ=America/Chicago
       - VIRTUAL_HOST=pihole.$DOMAIN
-      - WEBPASSWORD=/run/secrets/webpassword
       - ServerIP=$SERVER_IP
       - INTERFACE=$INTERFACE
       - DNS1=172.31.1.3#5053

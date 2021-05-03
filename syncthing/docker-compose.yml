@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
     labels:
       - traefik.enable=true
-      - "traefik.http.routers.syncthing.rule=(HostRegexp(`sync.{domain}.com`) && Path(`/{{.Node.Hostname}}`))"
+      - "traefik.http.routers.syncthing.rule=(HostRegexp(`sync.${DOMAIN}.com`) && Path(`/{{.Node.Hostname}}`))"
       - traefik.http.routers.syncthing.entrypoints=websecure
       - traefik.http.services.syncthing.loadbalancer.server.port=8384
 

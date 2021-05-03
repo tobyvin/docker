@@ -86,7 +86,7 @@ services:
       - traefik.http.middlewares.oauth.forwardauth.address=http://oauth:4181
       - traefik.http.middlewares.oauth.forwardauth.trustForwardHeader=true
       - traefik.http.middlewares.oauth.forwardauth.authResponseHeaders=X-Forwarded-User
-    # Logout: https://oauth.nasaltmine.com/_oauth/logout
+    # Logout: https://oauth.tobyvin.com/_oauth/logout
 
   whoami:
     image: traefik/whoami

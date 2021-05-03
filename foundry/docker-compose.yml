@@ -11,7 +11,7 @@ services:
       - CONTAINER_PATCH_URLS=https://gist.githubusercontent.com/yddlef/df54ee1bbca93095a71d75cd15e216eb/raw/plutonium.sh
       - FOUNDRY_UID=1000
       - FOUNDRY_GID=1000
-      - FOUNDRY_HOSTNAME=foundry.nasaltmine.com
+      - FOUNDRY_HOSTNAME=foundry.${DOMAIN}
       - FOUNDRY_PROXY_PORT=443
       - FOUNDRY_PROXY_SSL=true
       - FOUNDRY_WORLD=elda

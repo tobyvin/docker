@@ -10,8 +10,8 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=America/Chicago
-      - FILE__SUDO_PASSWORD=/run/secrets/code_password
-      - PROXY_DOMAIN=code-server.nasaltmine.com
+      - SUDO_PASSWORD_FILE=/run/secrets/code_password
+      - PROXY_DOMAIN=code-server.${DOMAIN}
     volumes:
       - ./data:/config
       - sync:${HOME}/Sync
