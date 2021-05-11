@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://json.schemastore.org/traefik-v2-file-provider.json
+
+http:
+  routers:
+    viz:
+      service: viz
+      entryPoints:
+        - websecure
+      rule: "Host(`viz.tobyvin.com`)"
+
+  services:
+    viz:
+      loadBalancer:
+        servers:
+          - url: "http://heimdall.asgard:8080"

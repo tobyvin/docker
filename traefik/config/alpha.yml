@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://json.schemastore.org/traefik-v2-file-provider.json
+
+http:
+  routers:
+    alpha:
+      service: alpha
+      entryPoints:
+        - websecure
+      rule: "Host(`alpha.tobyvin.com`)"
+
+  services:
+    alpha:
+      loadBalancer:
+        servers:
+          - url: "http://odin.asgard:30000"

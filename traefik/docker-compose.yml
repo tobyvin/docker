@@ -4,6 +4,7 @@ services:
   traefik:
     image: traefik
     container_name: traefik
+    env_file: .env
     command:
       - --api=true
       - --api.dashboard=true
@@ -12,7 +13,7 @@ services:
       - --providers.docker.network=proxy
       - --providers.docker.exposedbydefault=false
       - --providers.docker.defaultrule=Host(`{{ index .Labels "com.docker.compose.service" }}.$DOMAIN`)
-      - --providers.file.filename=/data/traefik.yml
+      - --providers.file.directory=/etc/traefik
       ## entrypoints
       - --entrypoints.web.address=:80
       - --entrypoints.web.http.redirections.entryPoint.to=websecure
@@ -32,6 +33,7 @@ services:
       # - --certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./config:/etc/traefik
       - ./data:/data
     ports:
       - 80:80
@@ -48,7 +50,7 @@ services:
   oauth:
     image: thomseddon/traefik-forward-auth:2.2.0-arm
     container_name: oauth
-    command: 
+    command:
       - --log-level=warn
       - --log-format=text
       - --auth-host=oauth.$DOMAIN
@@ -59,7 +61,7 @@ services:
       - --whitelist=$EMAIL,$WHITELIST
       ## CORS/OPTIONS
       - --rule.allow-cors.rule=allow
-      - --rule.allow-cors.rule=Method(`OPTIONS`) 
+      - --rule.allow-cors.rule=Method(`OPTIONS`)
       ## foundry
       - --rule.foundry.action=allow
       - --rule.foundry.rule=Host(`foundry.$DOMAIN`)
