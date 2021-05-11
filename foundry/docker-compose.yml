@@ -17,7 +17,7 @@ services:
       - FOUNDRY_WORLD=elda
       - TIMEZONE=America/Chicago
     volumes:
-      - nfs:/data
+      - foundry:/data
     expose:
       - 30000
     secrets:
@@ -32,7 +32,7 @@ secrets:
     file: ./secrets/foundry_secrets.json
 
 volumes:
-  nfs:
+  foundry:
     driver: local
     driver_opts:
       type: "nfs"
