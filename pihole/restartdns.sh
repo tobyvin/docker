@@ -1,3 +1,5 @@
 #!/bin/bash
 
-docker-compose exec pihole pihole restartdns
+project="$(dirname "$(readlink -fm "$0")")"
+
+docker-compose -f "${project}/docker-compose.yml" exec pihole pihole restartdns

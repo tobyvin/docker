@@ -9,12 +9,14 @@ services:
       - NET_ADMIN
     env_file:
       - .env
-      - secrets/webpassword.env
+    secrets:
+      - webpassword
     environment:
       - ADMIN_EMAIL=$EMAIL
       - TZ=America/Chicago
       - VIRTUAL_HOST=pihole.$DOMAIN
       - ServerIP=$SERVER_IP
+      - WEBPASSWORD=/run/secrets/webpassword
       - INTERFACE=$INTERFACE
       - DNS1=172.31.1.3#5053
       - DNS2=172.31.1.3#5053
