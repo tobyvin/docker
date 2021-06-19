@@ -8,7 +8,7 @@ services:
     restart: unless-stopped
     environment:
       - CONTAINER_CACHE=/data/Cache
-      - CONTAINER_PATCH_URLS=https://gist.githubusercontent.com/yddlef/df54ee1bbca93095a71d75cd15e216eb/raw/plutonium.sh
+      - CONTAINER_PATCH_URLS=https://gist.githubusercontent.com/surged20/7cad549c28c01e950b32f03b1793efb7/raw/plutonium-next.sh
       - FOUNDRY_UID=1000
       - FOUNDRY_GID=1000
       - FOUNDRY_HOSTNAME=foundry.${DOMAIN}
