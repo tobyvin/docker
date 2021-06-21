@@ -1,32 +1,78 @@
-version: "3"
+version: "3.8"
 
-services:
-  foundry:
+# https://github.com/yaml/yaml/issues/35#issuecomment-801465532
+
+x-defaults:
+  base: &base
     image: felddy/foundryvtt
-    container_name: foundry
     init: true
     restart: unless-stopped
-    environment:
-      - CONTAINER_CACHE=/cache
-      - CONTAINER_PATCH_URLS=https://gist.githubusercontent.com/surged20/7cad549c28c01e950b32f03b1793efb7/raw/plutonium-next.sh
-      - FOUNDRY_UID=1000
-      - FOUNDRY_GID=1000
-      - FOUNDRY_HOSTNAME=foundry.${DOMAIN}
-      - FOUNDRY_PROXY_PORT=443
-      - FOUNDRY_PROXY_SSL=true
-      - FOUNDRY_MINIFY_STATIC_FILES=true
-      - TIMEZONE=America/Chicago
-    volumes:
-      - nfs:/data
-      - ./cache:/cache
-    expose:
-      - 30000
     secrets:
       - source: foundry_secrets
         target: config.json
+
+  env: &env
+    "CONTAINER_CACHE": "/cache"
+    "CONTAINER_PATCH_URLS": "https://gist.githubusercontent.com/surged20/7cad549c28c01e950b32f03b1793efb7/raw/plutonium-next.sh"
+    "FOUNDRY_UID": 1000
+    "FOUNDRY_GID": 1000
+    "FOUNDRY_HOSTNAME": "foundry.${DOMAIN}"
+    "FOUNDRY_PROXY_PORT": 443
+    "FOUNDRY_PROXY_SSL": "true"
+    "FOUNDRY_MINIFY_STATIC_FILES": "true"
+    "TIMEZONE": "America/Chicago"
+
+services:
+  elda:
+    <<: *base
+    container_name: elda
+    hostname: elda
+    environment:
+      <<: *env
+      FOUNDRY_ROUTE_PREFIX: elda
+      FOUNDRY_WORLD: elda
+    volumes:
+      - ./data/elda:/data
+      - ./data/cache:/cache
+      - nfs:/data/Data
     labels:
       - traefik.enable=true
-      - traefik.http.routers.foundry.entrypoints=websecure
+      - traefik.http.routers.elda.entrypoints=websecure
+      - traefik.http.routers.elda.rule=Host(`foundry.$DOMAIN`) && PathPrefix(`/elda`)
+
+  hathea:
+    <<: *base
+    container_name: hathea
+    hostname: hathea
+    environment:
+      <<: *env
+      FOUNDRY_ROUTE_PREFIX: hathea
+      FOUNDRY_WORLD: hathea
+    volumes:
+      - ./data/hathea:/data
+      - ./data/cache:/cache
+      - nfs:/data/Data
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.hathea.entrypoints=websecure
+      - traefik.http.routers.hathea.rule=Host(`foundry.$DOMAIN`) && PathPrefix(`/hathea`)
+
+  cranador:
+    <<: *base
+    container_name: cranador
+    hostname: cranador
+    environment:
+      <<: *env
+      FOUNDRY_ROUTE_PREFIX: cranador
+      FOUNDRY_WORLD: cranador
+    volumes:
+      - ./data/cranador:/data
+      - ./data/cache:/cache
+      - nfs:/data/Data
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.cranador.entrypoints=websecure
+      - traefik.http.routers.cranador.rule=Host(`foundry.$DOMAIN`) && PathPrefix(`/cranador`)
 
 secrets:
   foundry_secrets:
