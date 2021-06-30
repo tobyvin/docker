@@ -2,19 +2,27 @@ version: "3.3"
 
 services:
   portainer:
-    image: portainer/portainer-ce:alpine
+    image: portainer/portainer-ce
     container_name: portainer
+    restart: unless-stopped
     command: -H unix:///var/run/docker.sock
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./data:/data
+      - nfs:/data
     ports:
       - 9000:9000
-    restart: unless-stopped
     labels:
       - traefik.enable=true
       - traefik.http.routers.portainer.entrypoints=websecure
       - traefik.http.services.portainer.loadbalancer.server.port=9000
+
+volumes:
+  nfs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: addr=bifrost,nolock,soft,rw
+      device: ":/mnt/share/docker/portainer"
 
 networks:
   default:

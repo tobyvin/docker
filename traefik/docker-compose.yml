@@ -34,7 +34,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./config:/etc/traefik
-      - ./data:/data
+      - nfs:/data
     ports:
       - 80:80
       - 443:443
@@ -100,6 +100,14 @@ services:
 secrets:
   secrets_oauth:
     file: secrets/oauth
+
+volumes:
+  nfs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: addr=bifrost,nolock,soft,rw
+      device: ":/mnt/share/docker/traefik"
 
 networks:
   default:
