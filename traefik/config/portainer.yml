@@ -2,14 +2,14 @@
 
 http:
   routers:
-    alpha:
-      service: alpha
+    portainer:
+      service: portainer
       entryPoints:
         - websecure
-      rule: "Host(`alpha.tobyvin.com`)"
+      rule: "Host(`portainer.tobyvin.com`)"
 
   services:
-    alpha:
+    portainer:
       loadBalancer:
         servers:
-          - url: "http://odin.asgard:30000"
+          - url: "http://portainer:9000"
