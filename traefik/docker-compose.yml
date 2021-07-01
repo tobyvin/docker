@@ -69,10 +69,10 @@ services:
       - --rule.personal.action=allow
       - --rule.personal.rule=Host(`heimdall.$DOMAIN`)
     secrets:
-      - source: secrets_auth
-        target: /secrets_auth
+      - source: auth
+        target: /auth
     environment:
-      - CONFIG=/secrets_auth
+      - CONFIG=/auth
     expose:
       - 4181
     restart: unless-stopped
@@ -98,7 +98,7 @@ services:
       - traefik.http.routers.whoami.entrypoints=websecure
 
 secrets:
-  secrets_auth:
+  auth:
     file: secrets/auth
 
 volumes:
